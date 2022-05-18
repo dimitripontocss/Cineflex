@@ -1,0 +1,4 @@
+<Route path="/" element={ <MovieSelector />} />
+                <Route path="/sessao" element={<TimeSelector />} />
+                <Route path="assento" element={<SeatSelector />} />
+                <Route path="/sucesso" element={<Sucess />} />

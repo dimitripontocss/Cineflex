@@ -1,0 +1,16 @@
+.header{
+    width: 100%;
+    height: 70px;
+
+    background-color: #C3CFD9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 40px;
+    color: #E8833A;
+}
