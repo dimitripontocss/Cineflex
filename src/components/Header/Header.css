@@ -13,4 +13,8 @@
     font-weight: 400;
     font-size: 40px;
     color: #E8833A;
+
+    position: fixed;
+    top: 0;
+    left: 0;
 }

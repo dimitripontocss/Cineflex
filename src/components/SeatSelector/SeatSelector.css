@@ -1,0 +1,33 @@
+.footerSeats{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100px;
+    
+    display: flex;
+    align-items: center;
+
+    background-color: #9EADBA;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.footerSeats img{
+    height: 90%;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.dados{
+    display: flex;
+    flex-direction: column;
+}
+
+.dados>span{
+    margin-top: 10px;
+}
