@@ -8,11 +8,32 @@ import Loading from "../Loading/Loading"
 function Footer({selected}){
     return(
         <>
-            <img src={selected.movie.posterURL}/>
+            <img src={selected.movie.posterURL} alt="Movie"/>
             <div className='dados'>
             <span>{selected.movie.title}</span>
             <span>{selected.day.weekday} - {selected.name}</span>
             </div>
+        </>
+    )
+}
+
+function Empty({seat}){
+    console.log(seat)
+    return(
+        <></>
+    )
+}
+
+function Ocupied({seat}){
+    return(
+        <></>
+    )
+}
+
+function Seat({seat}){
+    return(
+        <>
+        {seat.isAvailable ? <Empty seat={seat}/> : <Ocupied seat={seat}/>}
         </>
     )
 }
@@ -33,7 +54,7 @@ export default function SeatSelector(){
         <div className="selectorSeats">
             <h3>Selecione o horário</h3>
             <div className="seats">
-                
+                {verificador ? <Loading /> : selected.seats.map((seat)=> <Seat seat={seat}/>)}
             </div>
             <div className="footerSeats">
                 { verificador ? <></> : <Footer selected={selected}/> }

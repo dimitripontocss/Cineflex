@@ -51,7 +51,7 @@ export default function TimeSelector(){
                 {days.length === 0 ? <Loading /> : days.map((day)=> <Days key={day.id} day={day} />)}
             </div>
             <div className="footerSections">
-                <img src={selectedMovie.posterURL}/>
+                <img src={selectedMovie.posterURL} alt="Movie"/>
                 <span>{selectedMovie.title}</span>
             </div>
         </div>

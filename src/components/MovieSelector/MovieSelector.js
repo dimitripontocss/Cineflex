@@ -6,7 +6,7 @@ import Loading from "../Loading/Loading"
 
 function Movie({id,url}){
     return(
-            <Link to={`/sessoes/${id}`}><img src={url}/></Link>
+            <Link to={`/sessoes/${id}`}><img src={url} alt="Movie"/></Link>
     )
 }
 

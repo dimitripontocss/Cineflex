@@ -1,3 +1,18 @@
+.selectorSeats{
+    margin-top: 110px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    color: #293845;
+}
+
 .footerSeats{
     position: fixed;
     bottom: 0;
