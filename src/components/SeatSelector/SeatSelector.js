@@ -5,100 +5,117 @@ import { Link } from "react-router-dom"
 import "./SeatSelector.css"
 import Loading from "../Loading/Loading"
 
-function Footer({selected}){
-    return(
+function Footer({ selected }) {
+    return (
         <>
-            <img src={selected.movie.posterURL} alt="Movie"/>
+            <img src={selected.movie.posterURL} alt="Movie" />
             <div className='dados'>
-            <span>{selected.movie.title}</span>
-            <span>{selected.day.weekday} - {selected.name}</span>
+                <span>{selected.movie.title}</span>
+                <span>{selected.day.weekday} - {selected.name}</span>
             </div>
         </>
     )
 }
 
-function Selected({seat}){
-    return(
-        <div className="seat selected">
+function Selected({ seat, setSelectedSeats, selectedSeats }) {
+    return (
+        <div onClick={() => unselectSeat(seat.id, setSelectedSeats, selectedSeats)} className="seat selected">
             <p>{seat.name}</p>
         </div>
     )
 }
 
-function Empty({seat}){
-    return(
-        <div className="seat available">
+function unselectSeat(id, setSelectedSeats, selectedSeats) {
+    const newSeats = selectedSeats.filter(function (f) { return f !== id })
+    setSelectedSeats(newSeats)
+}
+
+function selectSeat(id, setSelectedSeats, selectedSeats) {
+    setSelectedSeats([...selectedSeats, id])
+}
+
+function Empty({ seat, setSelectedSeats, selectedSeats }) {
+    return (
+        <div onClick={() => selectSeat(seat.id, setSelectedSeats, selectedSeats)} className="seat available">
             <p>{seat.name}</p>
         </div>
     )
 }
 
-function Ocupied({seat}){
-    console.log(seat)
-    return(
+function Ocupied({ seat }) {
+    return (
         <div className="seat ocupied">
             <p>{seat.name}</p>
         </div>
     )
 }
 
-function Seat({seat}){
-    return(
+function isSelected(seat, selectedSeats) {
+    if (selectedSeats.length === 0) {
+        return false;
+    }
+    if (selectedSeats.includes(seat.id)) {
+        return true;
+    } else {
+        return false
+    }
+}
+
+function Seat({ seat, setSelectedSeats, selectedSeats }) {
+    return (
         <>
-        {seat.isAvailable ? <Empty seat={seat}/> : <Ocupied seat={seat}/>}
+            {seat.isAvailable ? <Empty seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} /> : <Ocupied seat={seat} />}
         </>
     )
 }
 
-export default function SeatSelector(){
-    const {idSession} = useParams()
+export default function SeatSelector() {
+    const { idSession } = useParams()
 
-    const example = {name:""}
-
-    const [name,setName] = React.useState("")
-    const [cpf,setCpf] = React.useState("")
+    const [name, setName] = React.useState("")
+    const [cpf, setCpf] = React.useState("")
     const [selected, setSelected] = React.useState({})
     const [verificador, setVerificador] = React.useState(true)
     const [selectedSeats, setSelectedSeats] = React.useState([])
 
-    function sendInfo(event){
+    function sendInfo(event) {
         event.preventDefault();
-        const data = {
-            id: selectedSeats,
-            name: name,
-            cpf: cpf
+        if(selectedSeats.length === 0){
+            alert("Selecione ao menos um assento!")
+        }else{
+            const data = {
+                id: selectedSeats,
+                name: name,
+                cpf: cpf
+            }
+            console.log(data)
         }
-        console.log(data)
     }
 
-    React.useEffect( () => {
+    React.useEffect(() => {
         const promiseSeats = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`)
-        promiseSeats.then((response)=> {setSelected(response.data); setVerificador(false) })
+        promiseSeats.then((response) => { setSelected(response.data); setVerificador(false) })
     }, [])
 
-    return(
+    console.log(selected)
+
+    return (
         <div className="selectorSeats">
             <h3>Selecione o(s) assento(s)</h3>
             <div className="seats">
-                {verificador ? <Loading /> : selected.seats.map((seat,index)=> <Seat key={index} seat={seat}/>)}
+                {verificador ? <Loading /> : selected.seats.map((seat, index) => (isSelected(seat, selectedSeats)) ? <Selected key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} /> : <Seat key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} />)}
             </div>
             <div className="examples">
                 <div>
-                {
-                    <Selected seat={example} />
-                }
+                    <div className="seat selected"></div>
                     <p>Selecionado</p>
                 </div>
                 <div>
-                {
-                    <Empty seat={example} />
-                }
+                    <div className="seat available"></div>
                     <p>Disponível</p>
                 </div>
                 <div>
-                {
-                    <Ocupied seat={example} />
-                }
+                    <div className="seat ocupied"></div>
                     <p>Indisponível</p>
                 </div>
 
@@ -107,7 +124,7 @@ export default function SeatSelector(){
                 <div className="inputs">
                     <p>Nome do comprador:</p>
                     <input
-                        type="text" 
+                        type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Digite seu nome..."
@@ -115,7 +132,7 @@ export default function SeatSelector(){
                     />
                     <p>CPF do comprador:</p>
                     <input
-                        type="text" 
+                        type="text"
                         value={cpf}
                         onChange={(e) => setCpf(e.target.value)}
                         placeholder="Digite seu CPF..."
@@ -123,10 +140,10 @@ export default function SeatSelector(){
                         required
                     />
                 </div>
-                <button type="submit">Reservar assento(s)</button>
+                <Link to={"/sucesso"}><button type="submit">Reservar assento(s)</button></Link>
             </form>
             <div className="footerSeats">
-                { verificador ? <></> : <Footer selected={selected}/> }
+                {verificador ? <></> : <Footer selected={selected} />}
             </div>
         </div>
     )
