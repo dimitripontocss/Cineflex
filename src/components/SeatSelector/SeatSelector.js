@@ -17,16 +17,28 @@ function Footer({selected}){
     )
 }
 
-function Empty({seat}){
-    console.log(seat)
+function Selected({seat}){
     return(
-        <></>
+        <div className="seat selected">
+            <p>{seat.name}</p>
+        </div>
+    )
+}
+
+function Empty({seat}){
+    return(
+        <div className="seat available">
+            <p>{seat.name}</p>
+        </div>
     )
 }
 
 function Ocupied({seat}){
+    console.log(seat)
     return(
-        <></>
+        <div className="seat ocupied">
+            <p>{seat.name}</p>
+        </div>
     )
 }
 
@@ -41,21 +53,77 @@ function Seat({seat}){
 export default function SeatSelector(){
     const {idSession} = useParams()
 
+    const example = {name:""}
+
+    const [name,setName] = React.useState("")
+    const [cpf,setCpf] = React.useState("")
     const [selected, setSelected] = React.useState({})
     const [verificador, setVerificador] = React.useState(true)
+
+    function sendInfo(event){
+        event.preventDefault();
+        const data = {
+            id: [1,2,3],
+            name: name,
+            cpf: cpf
+        }
+        console.log(data)
+    }
 
     React.useEffect( () => {
         const promiseSeats = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`)
         promiseSeats.then((response)=> {setSelected(response.data); setVerificador(false) })
     }, [])
-    console.log(selected)
 
     return(
         <div className="selectorSeats">
-            <h3>Selecione o horário</h3>
+            <h3>Selecione o(s) assento(s)</h3>
             <div className="seats">
-                {verificador ? <Loading /> : selected.seats.map((seat)=> <Seat seat={seat}/>)}
+                {verificador ? <Loading /> : selected.seats.map((seat,index)=> <Seat key={index} seat={seat}/>)}
             </div>
+            <div className="examples">
+                <div>
+                {
+                    <Selected seat={example} />
+                }
+                    <p>Selecionado</p>
+                </div>
+                <div>
+                {
+                    <Empty seat={example} />
+                }
+                    <p>Disponível</p>
+                </div>
+                <div>
+                {
+                    <Ocupied seat={example} />
+                }
+                    <p>Indisponível</p>
+                </div>
+
+            </div>
+            <form onSubmit={sendInfo}>
+                <div className="inputs">
+                    <p>Nome do comprador:</p>
+                    <input
+                        type="text" 
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Digite seu nome..."
+                        required
+                    />
+                    <p>CPF do comprador:</p>
+                    <input
+                        type="text" 
+                        value={cpf}
+                        onChange={(e) => setCpf(e.target.value)}
+                        placeholder="Digite seu CPF..."
+                        maxLength="11"
+                        required
+                    />
+                </div>
+                <button type="submit">Reservar assento(s)</button>
+            </form>
             <div className="footerSeats">
                 { verificador ? <></> : <Footer selected={selected}/> }
             </div>
