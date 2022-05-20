@@ -50,7 +50,7 @@ function Ocupied({ seat }) {
     )
 }
 
-function isSelected(seat, selectedSeats) {
+function isSelected(seat, selectedSeats,infos,setInfos,arr,setArr) {
     if (selectedSeats.length === 0) {
         return false;
     }
@@ -69,7 +69,19 @@ function Seat({ seat, setSelectedSeats, selectedSeats }) {
     )
 }
 
-export default function SeatSelector() {
+function pegaNome(selectedSeats,seats){
+    let str = ""
+    for(let i=0;i<seats.length;i++){
+        for(let j=0;j<selectedSeats.length;j++){
+            if(seats[i].id === selectedSeats[j]){
+                str+=seats[i].name + " ";
+            }
+        }
+    }
+    return str.split(" ");
+}
+
+export default function SeatSelector({infos,setInfos}) {
     const { idSession } = useParams()
 
     const [name, setName] = React.useState("")
@@ -77,20 +89,32 @@ export default function SeatSelector() {
     const [selected, setSelected] = React.useState({})
     const [verificador, setVerificador] = React.useState(true)
     const [selectedSeats, setSelectedSeats] = React.useState([])
-
-    function sendInfo(event) {
-        event.preventDefault();
+    const [arr,setArr] = React.useState([])
+    
+    function sendInfo() {
         if(selectedSeats.length === 0){
             alert("Selecione ao menos um assento!")
         }else{
+            const names = pegaNome(selectedSeats,selected.seats);
             const data = {
                 id: selectedSeats,
                 name: name,
                 cpf: cpf
             }
-            console.log(data)
+            setInfos({
+                id:selectedSeats,
+                buyer: name,
+                cpf: cpf,
+                assentos: names,
+                hora: selected.name,
+                data: selected.day.date,
+                title: selected.movie.title
+            })
+            console.log(data,names)
         }
     }
+
+    console.log(infos)
 
     React.useEffect(() => {
         const promiseSeats = axios.get(`https://mock-api.driven.com.br/api/v5/cineflex/showtimes/${idSession}/seats`)
@@ -103,7 +127,7 @@ export default function SeatSelector() {
         <div className="selectorSeats">
             <h3>Selecione o(s) assento(s)</h3>
             <div className="seats">
-                {verificador ? <Loading /> : selected.seats.map((seat, index) => (isSelected(seat, selectedSeats)) ? <Selected key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} /> : <Seat key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} />)}
+                {verificador ? <Loading /> : selected.seats.map((seat, index) => (isSelected(seat, selectedSeats,infos,setInfos,arr,setArr)) ? <Selected key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} /> : <Seat key={index} seat={seat} setSelectedSeats={setSelectedSeats} selectedSeats={selectedSeats} />)}
             </div>
             <div className="examples">
                 <div>
@@ -140,7 +164,7 @@ export default function SeatSelector() {
                         required
                     />
                 </div>
-                <Link to={"/sucesso"}><button type="submit">Reservar assento(s)</button></Link>
+               <Link to="/sucesso"><button onClick={sendInfo}type="submit">Reservar assento(s)</button></Link>
             </form>
             <div className="footerSeats">
                 {verificador ? <></> : <Footer selected={selected} />}
