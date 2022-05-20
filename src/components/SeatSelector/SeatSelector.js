@@ -59,11 +59,12 @@ export default function SeatSelector(){
     const [cpf,setCpf] = React.useState("")
     const [selected, setSelected] = React.useState({})
     const [verificador, setVerificador] = React.useState(true)
+    const [selectedSeats, setSelectedSeats] = React.useState([])
 
     function sendInfo(event){
         event.preventDefault();
         const data = {
-            id: [1,2,3],
+            id: selectedSeats,
             name: name,
             cpf: cpf
         }
