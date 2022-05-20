@@ -44,7 +44,7 @@ function Empty({ seat, setSelectedSeats, selectedSeats }) {
 
 function Ocupied({ seat }) {
     return (
-        <div className="seat ocupied">
+        <div onClick={()=>alert("Esse assento não está disponível.")}className="seat ocupied">
             <p>{seat.name}</p>
         </div>
     )

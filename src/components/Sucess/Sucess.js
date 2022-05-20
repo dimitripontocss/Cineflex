@@ -10,7 +10,7 @@ function Erro(){
            </div>)
 }
 
-export default function Sucess({infos}){
+export default function Sucess({infos,setInfos}){
     console.log(infos)
     const [verif,setVerif] = React.useState(0)
     const envio ={
@@ -18,14 +18,19 @@ export default function Sucess({infos}){
             name: infos.buyer,
             cpf: infos.cpf
     }
-    console.log(envio)
-    console.log(infos.assentos)
-    infos.assentos.pop();
-    console.log(infos.assentos)
+    React.useEffect( () => {
+        if(infos.id === undefined || infos.buyer === "" || infos.cpf === ""){
+            setVerif(2)
+        }else{
+            const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many",envio)
+            promise.then(()=>setVerif(1)).catch(()=>setVerif(2))
+            if(infos.assentos[infos.assentos.length-1] === ""){
+                infos.assentos.pop();
+            }
+        }
+    }, [])
 
-    const promise = axios.post("https://mock-api.driven.com.br/api/v5/cineflex/seats/book-many",envio)
-    promise.then(()=>setVerif(1)).catch(()=>setVerif(2))
-
+    console.log(verif)
     return(
         <div className="finish">
         {
@@ -51,7 +56,7 @@ export default function Sucess({infos}){
             </div>
              : <Erro/>
             }
-            <Link to={"/"}><button>Voltar pra Home</button></Link>
+            <Link to={"/"}><button onClick={()=>{setVerif(0);setInfos({})}}>Voltar pra Home</button></Link>
         </div>
         
     )
