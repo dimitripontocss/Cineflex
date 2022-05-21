@@ -12,7 +12,9 @@ function Movie({id,url}){
 
 
 
-export default function MovieSelector(){
+export default function MovieSelector({setBack}){
+
+    setBack(0);
 
     const [movies,setMovies] = React.useState([])
 

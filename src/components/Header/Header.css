@@ -14,7 +14,17 @@
     font-size: 40px;
     color: #E8833A;
 
-    position: fixed;
+    
     top: 0;
     left: 0;
+    position: relative;
+    position: fixed;
+}
+
+ion-icon{
+    position: absolute;
+    left: 5%;
+    font-size: 32px;
+    font-weight: 700;
+    color: #E8833A;
 }

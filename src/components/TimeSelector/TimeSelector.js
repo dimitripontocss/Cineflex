@@ -32,7 +32,9 @@ function setter(response,setSelectedMovie,setDays){
     setDays(response.data.days);
 }
 
-export default function TimeSelector(){
+export default function TimeSelector({setBack}){
+
+    setBack(1)
 
     const {idMovie} = useParams();
 
